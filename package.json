@@ -1,0 +1,34 @@
+{
+  "name": "ink-broadcast",
+  "version": "0.1.0",
+  "description": "Implementation of react-broadcast for ink",
+  "main": "dist/index.js",
+  "homepage": "https://github.com/jimmed/ink-broadcast",
+  "bugs": "https://github.com/jimmed/ink-broadcast/issues",
+  "repository": {
+    "url": "https://github.com/jimmed/ink-broadcast",
+    "type": "git"
+  },
+  "author": "Jim O'Brien <jim@jimmed.net>",
+  "license": "MIT",
+  "scripts": {
+    "build": "babel --out-dir dist src",
+    "watch": "yarn run build --watch",
+    "prepublishOnly": "yarn run build"
+  },
+  "dependencies": {
+    "invariant": "^2.2.2",
+    "prop-types": "^15.6.0"
+  },
+  "peerDependencies": {
+    "ink": "^0.4.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-export-extensions": "^6.22.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-plugin-transform-react-jsx": "^6.24.1",
+    "babel-preset-env": "^1.6.1"
+  }
+}
