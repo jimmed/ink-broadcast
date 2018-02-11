@@ -21,7 +21,10 @@ export default class Subscriber extends Component {
     broadcasts: PropTypes.object
   }
 
-  state = {}
+  constructor(props, context) {
+    super(props, context)
+    this.state = { value: null }
+  }
 
   getBroadcast(props = this.props, context = this.context) {
     const broadcasts = context.broadcasts || {}
@@ -35,6 +38,16 @@ export default class Subscriber extends Component {
     )
 
     return broadcast
+  }
+
+  componentWillMount() {
+    const broadcast = this.getBroadcast()
+
+    if (broadcast) {
+      // Mutating state here is icky and I hate it, but this is the only way
+      // I can find of passing value on first render
+      Object.assign(this.state, { value: broadcast.getValue() })
+    }
   }
 
   componentDidMount() {

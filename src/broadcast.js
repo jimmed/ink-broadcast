@@ -57,7 +57,10 @@ export default class Broadcast extends Component {
     broadcasts: PropTypes.object.isRequired
   }
 
-  broadcast = createBroadcast(this.props.value)
+  constructor(props, context) {
+    super(props, context)
+    this.broadcast = createBroadcast(props.value)
+  }
 
   getChildContext() {
     return {

@@ -17,6 +17,7 @@
     "prepublishOnly": "yarn run build"
   },
   "dependencies": {
+    "ink": "^0.4.1",
     "invariant": "^2.2.2",
     "prop-types": "^15.6.0"
   },
