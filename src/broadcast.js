@@ -1,6 +1,7 @@
 import { h, Component } from 'ink'
 import PropTypes from 'prop-types'
 import invariant from 'invariant'
+import BroadcastPropType from './propType'
 
 function createBroadcast(initialValue) {
   let currentValue = initialValue
@@ -28,61 +29,45 @@ function createBroadcast(initialValue) {
   }
 }
 
-/**
- * A <Broadcast> provides a generic way for descendants to "subscribe"
- * to some value that changes over time, bypassing any intermediate
- * shouldComponentUpdate's in the hierarchy. It puts all subscription
- * functions on context.broadcasts, keyed by "channel".
- *
- * To use it, a subscriber must opt-in to context.broadcasts. See the
- * <Subscriber> component for a reference implementation.
- */
-export default class Broadcast extends Component {
-  static propTypes = {
-    channel: PropTypes.string.isRequired,
-    children: PropTypes.node.isRequired,
-    compareValues: PropTypes.func,
-    value: PropTypes.any
+const makeBroadcaster = channel => {
+  if (!channel) {
+    throw new Error('Broadcast cannot be created without a channel name')
   }
+  return class Broadcast extends Component {
+    static componentName = `Broadcast(${channel})`
 
-  static defaultProps = {
-    compareValues: (prevValue, nextValue) => prevValue === nextValue
-  }
+    static propTypes = {
+      children: PropTypes.node.isRequired,
+      compareValues: PropTypes.func,
+      value: PropTypes.any
+    }
 
-  static contextTypes = {
-    broadcasts: PropTypes.object
-  }
+    static defaultProps = {
+      compareValues: (prevValue, nextValue) => prevValue === nextValue
+    }
 
-  static childContextTypes = {
-    broadcasts: PropTypes.object.isRequired
-  }
+    broadcast = createBroadcast(this.props.value)
 
-  constructor(props, context) {
-    super(props, context)
-    this.broadcast = createBroadcast(props.value)
-  }
+    static childContextTypes = {
+      [`broadcast-${channel}`]: BroadcastPropType.isRequired
+    }
 
-  getChildContext() {
-    return {
-      broadcasts: {
-        ...this.context.broadcasts,
-        [this.props.channel]: this.broadcast
+    getChildContext() {
+      return {
+        [`broadcast-${channel}`]: this.broadcast
       }
     }
-  }
 
-  componentWillReceiveProps(nextProps) {
-    invariant(
-      this.props.channel === nextProps.channel,
-      'You cannot change <Broadcast channel>'
-    )
+    componentWillReceiveProps(nextProps) {
+      if (!this.props.compareValues(this.props.value, nextProps.value)) {
+        this.broadcast.publish(nextProps.value)
+      }
+    }
 
-    if (!this.props.compareValues(this.props.value, nextProps.value)) {
-      this.broadcast.publish(nextProps.value)
+    render() {
+      return this.props.children
     }
   }
-
-  render() {
-    return this.props.children
-  }
 }
+
+export default makeBroadcaster
