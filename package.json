@@ -14,7 +14,7 @@
   "scripts": {
     "build": "babel --out-dir dist src",
     "test": "jest src",
-    "prepublishOnly": "yarn run build"
+    "prepublishOnly": "yarn run test && yarn run build"
   },
   "dependencies": {
     "ink": "^0.4.1",
@@ -32,7 +32,8 @@
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-plugin-transform-react-jsx": "^6.24.1",
     "babel-preset-env": "^1.6.1",
-    "jest": "^22.4.2"
+    "jest": "^22.4.2",
+    "jest-junit": "^3.6.0"
   },
   "engines": {
     "node": ">=6"
