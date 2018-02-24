@@ -1,2 +1,9 @@
-export { default as Broadcast } from './broadcast'
-export { default as Subscriber } from './subscriber'
+import makeBroadcaster from './broadcast'
+import makeSubscriber from './subscriber'
+
+const makeBroadcastContext = channel => ({
+  Broadcast: makeBroadcaster(channel),
+  Subscriber: makeSubscriber(channel)
+})
+
+export default makeBroadcastContext
